@@ -124,7 +124,7 @@ IDS=$(aws ec2 describe-vpc-endpoints --filters Name=vpc-id,Values=$VPC Name=vpc-
 ```
 
 > [!NOTE]
-> **Expect the destroy to stall at the security group or subnets.** When an AgentCore runtime in VPC mode is deleted, AWS keeps its network interfaces (type `agentic_ai`, shown as *in-use*) in your subnets for a while. You can't delete them yourself, and they cost nothing. Terraform waits up to ~15 minutes and then fails with `DependencyViolation`. Wait (it can take a few hours), then run the same `terraform destroy` again; it finishes the job. The interface endpoints are already gone by then, so **nothing is billing** while you wait. `python3 ../../tools/find_leftovers.py jsmith42` shows whether the interfaces are still there.
+> **Expect the destroy to stall at the security group or subnets.** When an AgentCore runtime in VPC mode is deleted, AWS keeps its network interfaces (type `agentic_ai`, shown as *in-use*) in your subnets for a while. You can't delete them yourself, and they cost nothing. Terraform keeps retrying for about **30 minutes** (measured: 28) and then fails with `DependencyViolation` on the security group and both private subnets. Wait (it can take a few hours), then run the same `terraform destroy` again; it finishes the job. The interface endpoints are already gone by then, so **nothing is billing** while you wait. `python3 ../../tools/find_leftovers.py jsmith42` shows whether the interfaces are still there.
 
 **Then destroy both stacks**, with the same flags you applied with:
 

@@ -51,7 +51,7 @@ It lists anything with your id still in the account (runtimes, gateways, memorie
 1. **Read the error**: it names the resource it couldn't delete and, usually, why ("in use", "has dependencies").
 2. Delete the hand-made resource that's in the way (table above, or `find_leftovers.py`).
 3. Run `terraform destroy` again. It picks up where it stopped.
-4. **AM05 solution (or after you fixed AM05): this is expected.** AgentCore keeps a deleted VPC-mode runtime's network interfaces (type `agentic_ai`, *in-use*) in your subnets for a while. Terraform waits about 15 minutes on the security group, then fails with `DependencyViolation`. You can't delete those interfaces yourself, and they cost nothing (the hourly endpoints are already gone by then). Wait, sometimes a few hours, and run the same `terraform destroy` again.
+4. **AM05 solution (or after you fixed AM05): this is expected.** AgentCore keeps a deleted VPC-mode runtime's network interfaces (type `agentic_ai`, *in-use*) in your subnets for a while. Terraform keeps retrying for about 30 minutes, then fails with `DependencyViolation` on the security group and both private subnets. You can't delete those interfaces yourself, and they cost nothing (the hourly endpoints are already gone by then). Wait, sometimes a few hours, and run the same `terraform destroy` again.
 
 ## The morning after
 
